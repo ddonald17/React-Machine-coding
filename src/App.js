@@ -1,67 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./styles.css";
+import json from "./Data.json";
+import { addNode, deleteNode } from "./utils";
+import List from './components/List';
 
 export default function App() {
-  const [recipe, setRecipe] = useState([]);
-  const [input, setInput] = useState("");
-  const [showResult, setShowResult] = useState(false);
-  const [cache, setCache] = useState({});
- 
- 
-  useEffect(() => {
-    const timer = setTimeout(fetchRecipes, 300);
+  const [data, setData] = useState(json);
+  
+  const handleAdd = (folderId) => {
+    const name = prompt("Enter name:");
+    const isFolder = window.confirm("Is it a folder?");
+    if (!name) return;
 
-    return () => {
-      clearTimeout(timer);
-    }
-  }, [input]);
+    const newNode = {
+      id: Date.now(),
+      name,
+      isFolder,
+      ...(isFolder ? { children: [] } : {}),
+    };
 
-  const fetchRecipes = async () => {
-    try {
-      if(cache[input]){
-        console.log("FROM CACHE")
-        setRecipe(cache[input]);
-        return;
-      }
-
-      console.log("API CALL");
-      const fetchedRecipes = await fetch(
-        `https://dummyjson.com/recipes/search?q=${input}`
-      );
-
-      if (!fetchedRecipes.ok) {
-        throw new Error(`HTTP error! status: ${fetchedRecipes.status}`);
-      }
-
-      const data = await fetchedRecipes.json();
-      setRecipe(data?.recipes);
-      setCache(prev => ({...prev, [input]: data?.recipes}));
-    } catch (error) {
-      console.error("Failed to fetch recipes:", error.message);
-    }
+    setData((prev) => addNode(prev, folderId, newNode));
   };
 
-  console.log(input, "+++++");
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this?")) {
+      setData((prev) => deleteNode(prev, id));
+    }
+  };
 
   return (
     <div className="App">
       <div className="header">
-        <h1>Autocomplete Search Bar</h1>
+        <h1>File Explorer</h1>
       </div>
-      <div className = "search-container">
-        <input
-          className = "search-input"
-          type = "text"
-          value = {input}
-          onChange = { (e) => setInput(e.target.value)}
-          onFocus = {() => setShowResult(true)}
-          onBlur = {() => setShowResult(false)}
-        />
-        {showResult && <div className = "result-container">
-        {recipe.map( (r) => (<div className="results" key = {r.id}>
-          {r.name}
-        </div>))}
-        </div>}
+      <div className="file-explorer">
+        <List list={data} handleAdd={handleAdd} handleDelete={handleDelete} />
       </div>
     </div>
   );

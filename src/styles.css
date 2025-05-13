@@ -2,29 +2,10 @@
   font-family: sans-serif;
   text-align: center;
 }
-
-.result-container {
-  width: 500px;
-  margin: auto;
+.file-explorer {
   text-align: left;
-  border: 1px solid black;
-  padding: 5px;
-  max-height: 500px;
-  overflow-y: scroll;
-
 }
-
-.results {
-  padding: 5px;
-  cursor: pointer;
-}
-
-.search-input {
-  width: 500px;
-  padding: 5px;
-}
-
-.results:hover{
-  background-color: beige;
+.files {
+  padding-left: 20px;
   cursor: pointer;
 }
