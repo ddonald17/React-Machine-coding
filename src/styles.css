@@ -2,10 +2,17 @@
   font-family: sans-serif;
   text-align: center;
 }
-.file-explorer {
-  text-align: left;
+
+.outer {
+  border: 1px solid black;
+  margin: 10px;
+  border-radius: 10px;
+  overflow: hidden;
 }
-.files {
-  padding-left: 20px;
-  cursor: pointer;
+
+.inner {
+  background-color: green;
+  color: white;
+  text-align: right;
+  transition: 0.5s ease-in;
 }
